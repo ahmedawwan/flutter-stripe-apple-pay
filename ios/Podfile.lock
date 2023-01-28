@@ -1,0 +1,75 @@
+PODS:
+  - Flutter (1.0.0)
+  - Stripe (23.1.1):
+    - StripeApplePay (= 23.1.1)
+    - StripeCore (= 23.1.1)
+    - StripePayments (= 23.1.1)
+    - StripePaymentsUI (= 23.1.1)
+    - StripeUICore (= 23.1.1)
+  - stripe_ios (0.0.1):
+    - Flutter
+    - Stripe (~> 23.1.0)
+    - StripeApplePay (~> 23.1.0)
+    - StripeFinancialConnections (~> 23.1.0)
+    - StripePayments (~> 23.1.0)
+    - StripePaymentSheet (~> 23.1.0)
+    - StripePaymentsUI (~> 23.1.0)
+  - StripeApplePay (23.1.1):
+    - StripeCore (= 23.1.1)
+  - StripeCore (23.1.1)
+  - StripeFinancialConnections (23.1.1):
+    - StripeCore (= 23.1.1)
+    - StripeUICore (= 23.1.1)
+  - StripePayments (23.1.1):
+    - StripeCore (= 23.1.1)
+    - StripePayments/Stripe3DS2 (= 23.1.1)
+  - StripePayments/Stripe3DS2 (23.1.1):
+    - StripeCore (= 23.1.1)
+  - StripePaymentSheet (23.1.1):
+    - StripeApplePay (= 23.1.1)
+    - StripeCore (= 23.1.1)
+    - StripePayments (= 23.1.1)
+    - StripePaymentsUI (= 23.1.1)
+  - StripePaymentsUI (23.1.1):
+    - StripeCore (= 23.1.1)
+    - StripePayments (= 23.1.1)
+    - StripeUICore (= 23.1.1)
+  - StripeUICore (23.1.1):
+    - StripeCore (= 23.1.1)
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - stripe_ios (from `.symlinks/plugins/stripe_ios/ios`)
+
+SPEC REPOS:
+  trunk:
+    - Stripe
+    - StripeApplePay
+    - StripeCore
+    - StripeFinancialConnections
+    - StripePayments
+    - StripePaymentSheet
+    - StripePaymentsUI
+    - StripeUICore
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  stripe_ios:
+    :path: ".symlinks/plugins/stripe_ios/ios"
+
+SPEC CHECKSUMS:
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  Stripe: ff389e265eeffb891b871b62b2fa644e30e69338
+  stripe_ios: 728603d6aa71a76f00dd05e202cba7d5b357a4be
+  StripeApplePay: 4413b4f21c0206094df20775aa5e8e063b9c8b5d
+  StripeCore: 6318dff8f7e42125c6e8b671ac54a6e82804705a
+  StripeFinancialConnections: 3586b42043921d46eadf59bb0dcd2ac17ff109f2
+  StripePayments: 7e903765860f1cc914041069edc9cf5e202f5ef7
+  StripePaymentSheet: 49602fb474a86e7624a082f256fd786b2eac80cb
+  StripePaymentsUI: e4b2be5b5b5edb774fc8667a71429194c39ce2a4
+  StripeUICore: 149ba9dda3f48dff829d2ebb2e3d455bc59dc0ed
+
+PODFILE CHECKSUM: cc1f88378b4bfcf93a6ce00d2c587857c6008d3b
+
+COCOAPODS: 1.11.3
