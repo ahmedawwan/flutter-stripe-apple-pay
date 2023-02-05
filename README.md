@@ -79,6 +79,8 @@ Before implementing the Apple Pay Flow, it is important to register a listener f
   }
 ```
 
+---
+
 ## Implementing the _handleApplePayPressMethod
 
 Create this method in the UI file
@@ -105,6 +107,8 @@ void _handleApplePayPress(context) async {
     }
   }
 ```
+
+---
 
 ## Creating a PaymentController
 
