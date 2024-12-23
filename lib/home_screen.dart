@@ -12,38 +12,31 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // ===========================================================================
   // Init State
-  // ===========================================================================
   @override
   void initState() {
-    Stripe.instance.isApplePaySupported.addListener(update);
+    Stripe.instance.isPlatformPaySupportedListenable.addListener(update);
     super.initState();
   }
 
-  // ===========================================================================
   // Dispose
-  // ===========================================================================
   @override
   void dispose() {
-    Stripe.instance.isApplePaySupported.removeListener(update);
+    Stripe.instance.isPlatformPaySupportedListenable.removeListener(update);
     super.dispose();
   }
 
-  void update() {
-    setState(() {});
-  }
+  // Update
+  void update() => setState(() {});
 
-  // ===========================================================================
   // Build
-  // ===========================================================================
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: ApplePayButton(
+          child: PlatformPayButton(
             onPressed: () => _handleApplePayPress(context),
           ),
         ),
@@ -51,14 +44,13 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // ===========================================================================
   // Apple Pay OnPressed Method
-  // ===========================================================================
-
   void _handleApplePayPress(context) async {
     try {
-      if (Stripe.instance.isApplePaySupported.value) {
-        bool paymentSuccessful = await PaymentController().payWithApplePay() ?? false;
+      final bool isEnable = await Stripe.instance.isPlatformPaySupported();
+      if (isEnable) {
+        bool paymentSuccessful =
+            await PaymentController().payWithApplePay() ?? false;
         if (paymentSuccessful) {
           // If payment is successful then execute this code
           log('payment successful');

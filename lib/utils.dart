@@ -1,6 +1,6 @@
-const String merchantID = 'YOUR-MERCHANT-ID';
-const String stripePublishableKey = 'YOUR-STRIPE-PUBLISHABLE-KEY';
-const String stripeSecretKey = 'YOUR-SECRET-KEY';
+const String merchantID = 'YOUR_MERCHANT_IDENTIFIER';
+const String stripePublishableKey = 'YOUR_STRIPE_PUBLISHABLE_KEY';
+const String stripeSecretKey = 'YOUR_STRIPE_SECRET_KEY';
 
-const String stripeBaseURL = 'https://api.stripe.com/';
-const String createPaymentIntentURL = 'v1/payment_intents';
+const String createPaymentIntentURL =
+    'https://api.stripe.com/v1/payment_intents';

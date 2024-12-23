@@ -12,7 +12,7 @@ Add flutter_stripe in your `pubspec.yaml`
 
 ```yaml
 dependencies:
-  flutter_stripe: any
+  flutter_stripe: 11.3.0
 ```
 
 ---
@@ -44,13 +44,13 @@ Before implementing the Apple Pay Flow, it is important to register a listener f
 ```dart
  @override
   void initState() {
-    Stripe.instance.isApplePaySupported.addListener(update);
+    Stripe.instance.isPlatformPaySupportedListenable.addListener(update);
     super.initState();
   }
 
   @override
   void dispose() {
-    Stripe.instance.isApplePaySupported.removeListener(update);
+    Stripe.instance.isPlatformPaySupportedListenable.removeListener(update);
     super.dispose();
   }
 
@@ -70,7 +70,7 @@ Before implementing the Apple Pay Flow, it is important to register a listener f
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: ApplePayButton(
+          child: PlatformPayButton(
             onPressed: () => _handleApplePayPress(context),
           ),
         ),
@@ -88,7 +88,7 @@ Create this method in the UI file
 ```dart
 void _handleApplePayPress(context) async {
     try {
-      if (Stripe.instance.isApplePaySupported.value) {
+      if (await Stripe.instance.isPlatformPaySupported()) {
         bool paymentSuccessful = await PaymentController().payWithApplePay() ?? false;
         if (paymentSuccessful) {
           // If payment is successful then execute this code
@@ -116,62 +116,65 @@ We will first create a PaymentController class with a method payWithApplePay() t
 
 ```dart
 class PaymentController {
-  // ===========================================================================
-  // Apple Pay
-  // ===========================================================================
   Future<bool?> payWithApplePay() async {
     // Total Price
     double totalPrice = 50;
     try {
-      // Presenting apple payment sheet
-      await Stripe.instance.presentApplePay(
-        params: ApplePayPresentParams(
-          cartItems: [
-            ApplePayCartSummaryItem.immediate(
-              label: 'Item',
-              amount: totalPrice.toString(),
-            ),
-          ],
-          country: 'US',
-          currency: 'EUR',
-        ),
-      );
       // Creating a payment intent, this will be used to get the client secret
       final paymentIntentResponse = await _getPaymentIntent({
         'amount': (totalPrice * 100).toInt().toString(),
         'currency': 'EUR',
         'payment_method_types[]': 'card',
       });
+      if (paymentIntentResponse == null) {
+        throw Exception('Failed to create payment intent');
+      }
       //client secret
-      final clientSecret = paymentIntentResponse!['client_secret'];
-      // Confirm apple pay payment with the client secret
-      await Stripe.instance.confirmApplePayPayment(clientSecret);
-      log('Payment Successful');
-      return true;
+      final String clientSecret = paymentIntentResponse['client_secret'];
+
+      // Presenting apple payment sheet
+      final PaymentIntent paymentIntent =
+          await Stripe.instance.confirmPlatformPayPaymentIntent(
+        clientSecret: clientSecret,
+        confirmParams: PlatformPayConfirmParams.applePay(
+          applePay: ApplePayParams(
+            merchantCountryCode: 'US',
+            currencyCode: 'EUR',
+            cartItems: [
+              ApplePayCartSummaryItem.immediate(
+                label: 'Item',
+                amount: totalPrice.toString(),
+              )
+            ],
+          ),
+        ),
+      );
+      if (paymentIntent.status == PaymentIntentsStatus.Succeeded) {
+        log('Payment Successful');
+        return true;
+      } else {
+        throw Exception(paymentIntent.status);
+      }
     } on PlatformException catch (exception) {
       log(exception.message ?? 'Something went wrong');
     } catch (exception) {
       log(exception.toString());
-      return false;
     }
     return false;
   }
 
-  // ===========================================================================
   // Creating a payment intent
-  // ===========================================================================
   Future<Map<String, dynamic>?> _getPaymentIntent(
       Map<String, dynamic> data) async {
     try {
-      http.Response paymentIntentRespose = await http.post(
+      http.Response paymentIntentResponse = await http.post(
         Uri.parse(
-            'https://api.stripe.com/v1/payment_intents'),
+            '$createPaymentIntentURL?amount=${data['amount']}&currency=${data['currency']}&payment_method_types[]=${data['payment_method_types[]']}'),
         headers: <String, String>{
           'Authorization': 'Bearer $stripeSecretKey',
         },
-        body: data,
       );
-      var jsonData = jsonDecode(paymentIntentRespose.body);
+      var jsonData = jsonDecode(paymentIntentResponse.body);
       return jsonData;
     } catch (exception) {
       log(exception.toString());
@@ -180,5 +183,3 @@ class PaymentController {
   }
 }
 ```
-
-
